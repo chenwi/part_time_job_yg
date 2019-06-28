@@ -12,7 +12,7 @@ from win32com.client import DispatchEx, constants as win32constants
 from tkinter import Tk, Label, Button, StringVar, Entry
 from tkinter.filedialog import askdirectory
 import threading
-
+import pythoncom
 win32com.client.gencache.EnsureDispatch('Word.Application')
 
 
@@ -324,8 +324,9 @@ class Writer:
         doc.save(self.doc_path)
 
     def write_pdf(self):
-
+        pythoncom.CoInitialize()
         word = DispatchEx("Word.Application")
+        pythoncom.CoInitialize()
         try:
             if os.path.exists(self.pdf_path):
                 os.remove(self.pdf_path)
