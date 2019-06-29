@@ -1,0 +1,41 @@
+Position,Sample Name,Gene Name,Cq,Concentration,Call,Sample Type,Standard,Cq Mean,Cq Error,Concentration Mean,Concentration Error,Replicate Group,Dye,Slope,EPF,Failure,Notes,Prep Notes,Number
+A1,S 1,Target 1,,,,Unknown,,,,,,A1,FAM,,,,,,1.0
+A2,S 1,IC 1,,,,Unknown,,,,,,A2,FAM,,,,,,2.0
+A3,S 1,Target 2,,,,Unknown,,,,,,A3,FAM,,,,,,3.0
+A4,S 1,IC 2,,,,Unknown,,,,,,A4,FAM,,,,,,4.0
+A5,Pos Control,Target 1,,,,Positive control,,,,,,,FAM,,,,,,5.0
+A6,NTC,Target 1,,,,Negative control,,,,,,,FAM,,,,,,6.0
+B1,S 1,Target 1,,,,Unknown,,,,,,A1,FAM,,,,,,7.0
+B2,S 1,IC 1,,,,Unknown,,,,,,A2,FAM,,,,,,8.0
+B3,S 1,Target 2,26.75,,Positive,Unknown,,26.75,0.00,,,A3,FAM,0.32,2.14,None,,,9.0
+B4,S 1,IC 2,25.02,,Positive,Unknown,,25.02,0.00,,,A4,FAM,0.25,2.6,None,,,10.0
+B5,Pos Control,IC 1,28.29,,Positive,Positive control,,28.29,0.00,,,,FAM,0.18,1.79,None,,,11.0
+B6,NTC,IC 1,,,Negative,Negative control,,,,,,,FAM,0.0,0.04,None,,,12.0
+C1,S 2,Target 1,27.43,,Positive,Unknown,,27.35,0.12,,,C1,FAM,0.22,1.95,None,,,13.0
+C2,S 2,IC 1,,,Negative,Unknown,,,,,,C2,FAM,0.0,0.05,None,,,14.0
+C3,S 2,Target 2,,,Negative,Unknown,,,,,,C3,FAM,0.0,0.03,None,,,15.0
+C4,S 2,IC 2,24.93,,Positive,Unknown,,24.97,0.06,,,C4,FAM,0.25,2.62,None,,,16.0
+C5,Pos Control,Target 2,26.64,,Positive,Positive control,,26.64,0.00,,,,FAM,0.31,2.16,None,,,17.0
+C6,NTC,Target 2,,,Negative,Negative control,,,,,,,FAM,0.0,0.02,None,,,18.0
+D1,S 2,Target 1,27.26,,Positive,Unknown,,27.35,0.12,,,C1,FAM,0.22,1.96,None,,,19.0
+D2,S 2,IC 1,,,Negative,Unknown,,,,,,C2,FAM,0.0,0.04,None,,,20.0
+D3,S 2,Target 2,,,Negative,Unknown,,,,,,C3,FAM,0.0,0.03,None,,,21.0
+D4,S 2,IC 2,25.01,,Positive,Unknown,,24.97,0.06,,,C4,FAM,0.25,2.58,None,,,22.0
+D5,Pos Control,IC 2,25.14,,Positive,Positive control,,25.14,0.00,,,,FAM,0.23,2.38,None,,,23.0
+D6,NTC,IC 2,,,Negative,Negative control,,,,,,,FAM,0.0,0.01,None,,,24.0
+E1,S 3,Target 1,27.35,,Positive,Unknown,,27.35,0.00,,,E1,FAM,0.21,1.95,Replicate groupcontains positivesand negatives.,,,25.0
+E2,S 3,IC 1,28.28,,Positive,Unknown,,28.26,0.03,,,E2,FAM,0.19,1.89,None,,,26.0
+E3,S 3,Target 2,,,Negative,Unknown,,,,,,E3,FAM,0.0,0.05,None,,,27.0
+E4,S 3,IC 2,,,Negative,Unknown,,,,,,E4,FAM,0.0,0.04,None,,,28.0
+F1,S 3,Target 1,,,Negative,Unknown,,,,,,E1,FAM,0.0,0.02,Replicate groupcontains positivesand negatives.,,,29.0
+F2,S 3,IC 1,28.24,,Positive,Unknown,,28.26,0.03,,,E2,FAM,0.18,1.79,None,,,30.0
+F3,S 3,Target 2,,,Negative,Unknown,,,,,,E3,FAM,0.0,0.04,None,,,31.0
+F4,S 3,IC 2,,,Negative,Unknown,,,,,,E4,FAM,0.0,0.02,None,,,32.0
+G1,S 4,Target 1,27.41,,Positive,Unknown,,27.34,0.11,,,G1,FAM,0.22,1.93,None,,,33.0
+G2,S 4,IC 1,28.16,,Positive,Unknown,,28.16,0.00,,,G2,FAM,0.17,1.75,Replicate groupcontains positivesand negatives.,,,34.0
+G3,S 4,Target 2,,,Negative,Unknown,,,,,,G3,FAM,0.0,0.04,None,,,35.0
+G4,S 4,IC 2,24.94,,Positive,Unknown,,24.94,0.00,,,G4,FAM,0.24,2.58,Replicate groupcontains positivesand negatives.,,,36.0
+H1,S 4,Target 1,27.26,,Positive,Unknown,,27.34,0.11,,,G1,FAM,0.21,1.91,None,,,37.0
+H2,S 4,IC 1,,,Negative,Unknown,,,,,,G2,FAM,0.0,0.05,Replicate groupcontains positivesand negatives.,,,38.0
+H3,S 4,Target 2,,,Negative,Unknown,,,,,,G3,FAM,0.0,0.05,None,,,39.0
+H4,S 4,IC 2,,,Negative,Unknown,,,,,,G4,FAM,0.0,0.03,Replicate groupcontains positivesand negatives.,,,40.0
