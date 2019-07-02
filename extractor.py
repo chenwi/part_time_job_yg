@@ -7,10 +7,15 @@ from docx.shared import Pt, Inches, Cm
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml.ns import qn
 import os
-from win32com.client import DispatchEx, constants as win32constants
+import win32com
+from win32com.client import DispatchEx, constants
 from tkinter import Tk, Label, Button, StringVar, Entry
 from tkinter.filedialog import askdirectory
 import threading
+import time
+import pythoncom
+
+win32com.client.gencache.EnsureDispatch('Word.Application')
 
 
 def sub(s):
@@ -60,15 +65,12 @@ class AbsQuant(Extractor):
         alldata = []
         flag = False
         for row in td:
-            # print(row)
             if row[2] == 'Color':
                 flag = True
                 continue
             if flag:
                 if row[2].startswith('Statistical'):
-                    # print('\n11111\n',row)
                     break
-                # print(row)
                 items = row[5:11] + row[17:25] + row[31:37]
                 alldata.append(items)
         return alldata
@@ -88,7 +90,6 @@ class AbsQuant(Extractor):
             for td in tr.findAll('td'):
                 text = td.getText()
                 if text.startswith('Amplification'):
-                    # print(text)
                     flag = True
                     break
 
@@ -97,7 +98,6 @@ class AbsQuant(Extractor):
         all_table = [self.columns]
         for row in alldata:
             row = list(map(sub, row))
-            # print(row)
             all_table.append(row)
         return all_table
 
@@ -114,11 +114,6 @@ class AbsQuant(Extractor):
 
     def to_csv(self, path='all.csv'):
         df = self.all_table2df()
-        # import numpy as np
-        # df = df.replace('nan', '')
-        # df['Number'] = df['Number'].astype(float)
-        # df['Number'] = df['Number'].astype(int)
-        # print(df.head())
         df.to_csv(path, index=None)
 
     # def html2pdf(self):
@@ -206,7 +201,7 @@ class RunEditor(Extractor):
 
 
 class Writer:
-    def __init__(self, file_dir, save_dir, doc_name='report.docx', pdf_name='report.pdf'):
+    def __init__(self, file_dir, save_dir):
         """
         :word文件转pdf
         :param doc_name word文件名称
@@ -220,9 +215,6 @@ class Writer:
         self.save_dir = os.path.abspath(save_dir)
         self.doc_path = os.path.join(self.save_dir, doc_name)
         self.pdf_path = os.path.join(self.save_dir, pdf_name)
-        # print(self.file_dir)
-        # print(self.doc_path)
-        # print(self.pdf_path)
 
     def write_doc(self):
         # 转docx
@@ -249,8 +241,7 @@ class Writer:
         r = p.add_run('荧光定量 PCR 检测报告')
         r.font.size = Pt(14)  # 设置字号
         r.font.bold = True  # 加粗
-        # blank line
-        # doc.add_paragraph('')
+
         doc.add_paragraph('')
         ### part 1
         p = doc.add_paragraph('')
@@ -259,7 +250,7 @@ class Writer:
 
         basic_tab_rows, basic_tab_cols = len(basic_table), len(basic_table[0])
         basic_tab = doc.add_table(rows=basic_tab_rows, cols=basic_tab_cols, style='Table Grid')
-        # 遍历表格
+
         for r in range(basic_tab_rows):
             for c in range(basic_tab_cols):
                 basic_tab.cell(r, c).text = basic_table[r][c]
@@ -271,15 +262,13 @@ class Writer:
         r.font.bold = True  # 加粗
         p = doc.add_paragraph('')
         r = p.add_run(r'Programs')
-        r.font.bold = True  # 加粗
+        r.font.bold = True
         for (title, td) in run_table:
             rows, cols = len(td), len(td[0])
-            # print(rows, cols)
             p = doc.add_paragraph('')
             p.add_run(title)
-            # r.font.bold = True  # 加粗
             table = doc.add_table(rows=rows, cols=cols, style='Table Grid')
-            # 遍历表格
+
             for r in range(rows):
                 for c in range(cols):
                     table.cell(r, c).text = td[r][c]
@@ -304,25 +293,22 @@ class Writer:
 
         abs_tab_rows, abs_tab_cols = len(abs_table), len(abs_table[0])
         abs_tab = doc.add_table(rows=abs_tab_rows, cols=abs_tab_cols, style='Table Grid')
-        # table.columns[1].width = Pt(2)
-        # table.columns[2].width = Pt(2)
+
         for r in range(abs_tab_rows):
             for c in range(abs_tab_cols):
-                run = abs_tab.cell(r, c).paragraphs[0].add_run(abs_table[r][c])  # 填入的内容
+                run = abs_tab.cell(r, c).paragraphs[0].add_run(abs_table[r][c])
                 if r == 0:
-                    run.font.bold = 1  # 设置是否加粗
-                    abs_tab.cell(r, c).paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.CENTER  # 设置居中
-                    # run.font.name = 'Times New Roman'  # 设置字体
-                    # run.font.size = Pt(11)  # 设置字号
-                    # run.font.color.rgb = RGBColor.from_string('00BFFF')  # 设置文字颜色
+                    run.font.bold = 1
+                    abs_tab.cell(r, c).paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
         abs_tab.cell(0, 1).width = Cm(5)
         abs_tab.cell(0, 2).width = Cm(4)
         doc.save(self.doc_path)
 
     def write_pdf(self):
-
+        pythoncom.CoInitialize()
         word = DispatchEx("Word.Application")
+        pythoncom.CoInitialize()
         try:
             if os.path.exists(self.pdf_path):
                 os.remove(self.pdf_path)
@@ -331,9 +317,10 @@ class Writer:
             worddoc.Close()
             # return pdf_name
         except Exception as e:
+            # print('aaa')
             print(e)
         finally:
-            word.Quit(win32constants.wdDoNotSaveChanges)
+            word.Quit(constants.wdDoNotSaveChanges)
 
 
 class Gui:
@@ -364,9 +351,6 @@ class Gui:
         self.path.set(self.file_dir)
         self.outpath.set(self.file_dir)
         self.err = False
-        # print(self.path)
-        # print(self.file_dir)
-        # print(self.save_dir)
 
     def select_outPath(self):
         self.save_dir = askdirectory()
@@ -380,8 +364,10 @@ class Gui:
         th2.start()
 
     def ui(self):
-        while not self.write_ok:
+        if not self.write_ok:
             self.bt.config(state='disabled')
+        while not self.write_ok:
+            time.sleep(3)
         self.bt.config(state='normal')
         if not self.err:
             self.lb.config(text="完成！")
@@ -389,13 +375,11 @@ class Gui:
     def write(self):
         self.write_ok = False
         try:
-            # self.lb.config(text="running...")
             writer = Writer(self.file_dir, self.save_dir)
             writer.write_doc()
             writer.write_pdf()
-            # self.lb.config(text="finished")
             self.write_ok = True
-            # print('ok')
+
         except Exception as e:
             print(e)
             self.err = True
@@ -404,21 +388,9 @@ class Gui:
 
 
 if __name__ == '__main__':
-    # abs = AbsQuant(r'data/Demo_Qual Detect Mono Color/report_resources/abs quant001.html')
-    # print(abs.used_data())
-    # print(abs.get_table())
-    # print(abs.img_src)
-    # abs.to_csv(r'data/Demo_Qual Detect Mono Color/report_resources.csv')
-    # run = RunEditor(r'data/Demo_Qual Detect Mono Color/report_resources/run_editor.html')
-    # print(run.table)
-
-    # file_dir=sys.argv[1]
-    # writer=Writer(file_dir)
-    # writer = Writer(r'data/Demo_10-Fold Dilution')
-    # writer.write_doc()
-    # writer.write_pdf()
     root = Tk()
     root.title('LC96 报告生成工具')
     root.geometry("400x150")
+    root.resizable(width=True, height=False)
     Gui(root)
     root.mainloop()

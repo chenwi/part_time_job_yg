@@ -8,11 +8,13 @@ from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml.ns import qn
 import os
 import win32com
-from win32com.client import DispatchEx, constants as win32constants
+from win32com.client import DispatchEx, constants, Dispatch
 from tkinter import Tk, Label, Button, StringVar, Entry
 from tkinter.filedialog import askdirectory
 import threading
+import time
 import pythoncom
+
 win32com.client.gencache.EnsureDispatch('Word.Application')
 
 
@@ -335,9 +337,10 @@ class Writer:
             worddoc.Close()
             # return pdf_name
         except Exception as e:
+            # print('aaa')
             print(e)
         finally:
-            word.Quit()
+            word.Quit(constants.wdDoNotSaveChanges)
 
 
 class Gui:
@@ -377,6 +380,7 @@ class Gui:
         self.outpath.set(self.save_dir)
 
     def run(self):
+
         self.lb.config(text="运行...")
         th = threading.Thread(target=self.write)
         th.start()
@@ -384,8 +388,10 @@ class Gui:
         th2.start()
 
     def ui(self):
-        while not self.write_ok:
+        if not self.write_ok:
             self.bt.config(state='disabled')
+        while not self.write_ok:
+            time.sleep(3)
         self.bt.config(state='normal')
         if not self.err:
             self.lb.config(text="完成！")
@@ -393,13 +399,11 @@ class Gui:
     def write(self):
         self.write_ok = False
         try:
-            # self.lb.config(text="running...")
             writer = Writer(self.file_dir, self.save_dir)
             writer.write_doc()
             writer.write_pdf()
-            # self.lb.config(text="finished")
             self.write_ok = True
-            # print('ok')
+
         except Exception as e:
             print(e)
             self.err = True
@@ -424,5 +428,6 @@ if __name__ == '__main__':
     root = Tk()
     root.title('LC96 报告生成工具')
     root.geometry("400x150")
+    root.resizable(width=True, height=False)
     Gui(root)
     root.mainloop()

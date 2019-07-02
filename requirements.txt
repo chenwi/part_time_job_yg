@@ -1,0 +1,4 @@
+pandas==0.20.3
+numpy
+bs4
+python-docx
